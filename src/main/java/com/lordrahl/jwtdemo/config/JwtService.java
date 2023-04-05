@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +55,7 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String jwtToken) {
-        return extractExpiration(jwtToken).before(new Date());
+        return extractExpiration(jwtToken).after(new Date());
     }
 
     private Date extractExpiration(String jwtToken) {
@@ -73,5 +74,13 @@ public class JwtService {
     private Key getSigningKey() {
         byte[] keyBytes = SECRET_KEY.getBytes();
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    /**
+     * Bean are called during startup :)
+     */
+    @Bean
+    public void testBean() {
+        System.out.println("This isn't called anywhere else");
     }
 }
